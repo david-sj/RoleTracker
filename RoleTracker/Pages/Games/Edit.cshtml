@@ -1,0 +1,50 @@
+﻿@page
+@model RoleTracker.Pages.Games.EditModel
+
+@{
+    ViewData["Title"] = "Editar";
+}
+
+<h1>Edit</h1>
+
+<h4>Game</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Game.Id" />
+            <div class="form-group">
+                <label asp-for="Game.Name" class="control-label"></label>
+                <input asp-for="Game.Name" class="form-control" />
+                <span asp-validation-for="Game.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Game.MasterName" class="control-label"></label>
+                <input asp-for="Game.MasterName" class="form-control" />
+                <span asp-validation-for="Game.MasterName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Game.HoursPlayed" class="control-label"></label>
+                <input asp-for="Game.HoursPlayed" class="form-control" />
+                <span asp-validation-for="Game.HoursPlayed" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Game.StartedAt" class="control-label"></label>
+                <input asp-for="Game.StartedAt" class="form-control" />
+                <span asp-validation-for="Game.StartedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Volver</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
