@@ -6,41 +6,52 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using RoleTracker.Data;
+using RoleTracker.DTO;
 using RoleTracker.Models;
+using RoleTracker.Services;
 
 namespace RoleTracker.Pages.Characters
 {
     public class EditModel : PageModel
     {
-        private readonly RoleTracker.Data.RoleTrackerContext _context;
+        private readonly IGameQueryService _gameQueryService;
+        private readonly ICharacterQueryService _characterQueryService;
+        private readonly ICharacterCrudService _characterCrudService;
 
-        public EditModel(RoleTracker.Data.RoleTrackerContext context)
+        public EditModel(IGameQueryService gameQueryService,
+                         ICharacterQueryService characterQueryService,
+                         ICharacterCrudService characterCrudService)
         {
-            _context = context;
+            _gameQueryService = gameQueryService;
+            _characterQueryService = characterQueryService;
+            _characterCrudService = characterCrudService;
         }
 
         [BindProperty]
         public Character Character { get; set; } = default!;
 
+        public List<SelectListItem> Games { get; set; }
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Character == null)
+            if (!id.HasValue)
             {
                 return NotFound();
             }
 
-            var character =  await _context.Character.FirstOrDefaultAsync(m => m.Id == id);
-            if (character == null)
+            var character = await _characterQueryService.GetCharacterByIdAsync(id.Value);
+            Games = await _gameQueryService.GetGamesForSelector();
+
+            if (character is null)
             {
                 return NotFound();
             }
             Character = character;
+
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -48,15 +59,23 @@ namespace RoleTracker.Pages.Characters
                 return Page();
             }
 
-            _context.Attach(Character).State = EntityState.Modified;
+            var characterCommand = new CharacterCommand()
+            {
+                Id = Character.Id,
+                Name = Character.Name,
+                Player = Character.Player,
+                Race = Character.Race,
+                Level = Character.Level,
+                GameId = Character.GameId
+            };
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _characterCrudService.SaveCharacterAsync(characterCommand);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CharacterExists(Character.Id))
+                if (!await CharacterExists(Character.Id))
                 {
                     return NotFound();
                 }
@@ -69,9 +88,9 @@ namespace RoleTracker.Pages.Characters
             return RedirectToPage("./Index");
         }
 
-        private bool CharacterExists(int id)
+        private async Task<bool> CharacterExists(int id)
         {
-          return (_context.Character?.Any(e => e.Id == id)).GetValueOrDefault();
+          return await _characterQueryService.CharacterExistsAsync(id);
         }
     }
 }
