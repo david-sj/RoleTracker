@@ -28,8 +28,14 @@ namespace RoleTracker.Models.SeedData
                     StartedAt = new DateTime(2024, 02, 01)
                 };
 
-                context.Game.AddRange( newGame );
+                context.Database.OpenConnection();
 
+                context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.Game ON");
+                context.Game.AddRange( newGame );
+                context.SaveChanges();
+                context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.Game OFF");
+
+                context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.Character ON");
                 context.Character.AddRange(
                     new Character
                     {
@@ -39,7 +45,6 @@ namespace RoleTracker.Models.SeedData
                         Player = "Juan",
                         Level = 1,
                         GameId = 1,
-                        Game = newGame
                     },
                     new Character
                     {
@@ -49,11 +54,11 @@ namespace RoleTracker.Models.SeedData
                         Player = "Ana",
                         Level = 1,
                         GameId = 1,
-                        Game = newGame
                     }
                 );
-
                 context.SaveChanges();
+                context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.Character OFF");
+                context.Database.CloseConnection();
             }
         }
     }
