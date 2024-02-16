@@ -54,5 +54,15 @@ namespace RoleTracker.Services
 
             return characters;
         }
+
+        public bool GameOngoingByCharacter(int idGame)
+        {
+            bool gameOnGoingByCharacter = false;
+            if (_context.Character is not null)
+            {
+                gameOnGoingByCharacter = _context.Character.Any(c => c.GameId == idGame);
+            }
+            return gameOnGoingByCharacter;
+        }
     }
 }

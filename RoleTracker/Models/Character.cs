@@ -8,22 +8,23 @@ namespace RoleTracker.Models
     {
         public int Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "El nombre del personaje es obligatorio")]
         [StringLength(50, ErrorMessage = "El nombre no puede ser mayor de 50 caracteres.")]
         [Display(Name = "Nombre")]
         public string Name { get; set; }
 
-        [Required]
-        [StringLength(50, ErrorMessage = "La raza no puede esr mayor de 20 caracteres.")]
+        [Required(ErrorMessage = "La raza es obligatorio")]
+        [StringLength(50, ErrorMessage = "La raza no puede ser mayor de 20 caracteres.")]
         [Display(Name = "Raza")]
         public string Race { get; set; }
 
-        [Required]
-        [StringLength(50, ErrorMessage = "El nombre del jugador no puede ser mayor de 50 caracteres.")]
+        [Required(ErrorMessage = "El nombre del jugador es obligatorio")]
+        [StringLength(50, ErrorMessage = "El nombre no puede ser mayor de 50 caracteres.")]
         [Display(Name = "Jugador")]
         public string Player { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "El nivel es obligatorio")]
+        [Range(1, int.MaxValue, ErrorMessage = "Solo se permiten números positivos")]
         [Display(Name = "Nivel")]
         public int Level { get; set; }
 

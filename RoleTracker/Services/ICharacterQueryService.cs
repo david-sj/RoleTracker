@@ -8,6 +8,7 @@ namespace RoleTracker.Services
         Task<Character?> GetCharacterByIdAsync(int id);
         Task<bool> CharacterExistsAsync(int id);
         Task<List<Character>> GetCharactersAsync();
+        bool GameOngoingByCharacter(int idGame);
 
     }
 }

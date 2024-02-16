@@ -9,10 +9,12 @@ namespace RoleTracker.Services
     public class GameCrudService : IGameCrudService
     {
         private readonly RoleTrackerContext _context;
+        private readonly ICharacterQueryService _characterQueryService;
 
-        public GameCrudService(RoleTrackerContext context)
+        public GameCrudService(RoleTrackerContext context, ICharacterQueryService characterQueryService)
         {
             _context = context;
+            _characterQueryService = characterQueryService;
         }
 
         public async Task CreateGameAsync(GameCommand gameCommand)
@@ -37,7 +39,9 @@ namespace RoleTracker.Services
         {
             var game = await _context.Game.FirstOrDefaultAsync(c => c.Id == id);
 
-            if (game is not null)
+            bool gameOngoing = _characterQueryService.GameOngoingByCharacter(id);
+
+            if (game is not null && !gameOngoing)
             {
                 _context.Game.Remove(game);
                 await _context.SaveChangesAsync();
