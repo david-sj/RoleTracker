@@ -75,19 +75,26 @@
                     showCancelButton: true,
                     confirmButtonColor: "#d33",
                     cancelButtonColor: "#3085d6",
-                    confirmButtonText: "Confirmar"
+                    confirmButtonText: "Confirmar",
+                    allowOutsideClick: false
                 }).then((result) => {
                     if (result.isConfirmed) {
                         Swal.fire({
                             title: "¡Hecho!",
                             text: "Se ha eliminado el personaje.",
-                            icon: "success"
+                            icon: "success",
+                            showCancelButton: false,
+                            confirmButtonColor: "#3085d6",
+                            confirmButtonText: "Ok!",
+                            allowOutsideClick: false
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                var btn = $(this);
+                                var id = btn.data("id");
+                                $("#characterId").val(id);
+                                $("#characterDeleteForm").submit();
+                            }
                         });
-
-                        var btn = $(this);
-                        var id = btn.data("id");
-                        $("#characterId").val(id);
-                        $("#characterDeleteForm").submit();
                     }
                 });
             })
