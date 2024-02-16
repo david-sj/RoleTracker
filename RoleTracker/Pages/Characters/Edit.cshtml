@@ -6,7 +6,6 @@
 }
 
 <h1>Editar personaje</h1>
-
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -18,35 +17,37 @@
                 <input asp-for="Character.Name" class="form-control" />
                 <span asp-validation-for="Character.Name" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="Character.Race" class="control-label"></label>
                 <input asp-for="Character.Race" class="form-control" />
                 <span asp-validation-for="Character.Race" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="Character.Player" class="control-label"></label>
                 <input asp-for="Character.Player" class="form-control" />
                 <span asp-validation-for="Character.Player" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="Character.Level" class="control-label"></label>
                 <input asp-for="Character.Level" class="form-control" />
                 <span asp-validation-for="Character.Level" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="Character.Game" class="control-label"></label>
                 <select asp-for="Character.GameId" class="form-control" asp-items="Model.Games"></select>
                 <span asp-validation-for="Character.GameId" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <input type="submit" value="Guardar" class="btn btn-primary" />
+                <a asp-page="./Index" class="btn btn-dark">Volver</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-page="./Index">Volver</a>
 </div>
 
 @section Scripts {

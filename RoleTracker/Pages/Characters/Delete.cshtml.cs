@@ -25,7 +25,7 @@ namespace RoleTracker.Pages.Characters
         }
 
         [BindProperty]
-      public Character Character { get; set; } = default!;
+        public Character Character { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
