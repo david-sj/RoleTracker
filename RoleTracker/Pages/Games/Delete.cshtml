@@ -1,6 +1,8 @@
 ﻿@page
 @model RoleTracker.Pages.Games.DeleteModel
 
+<!--Obsoleta, se borra desde el confirmar del index-->
+
 @{
     ViewData["Title"] = "Eliminar";
 }
@@ -40,7 +42,7 @@
     
     <form method="post">
         <input type="hidden" asp-for="Game.Id" />
-        <input type="submit" value="Eliminar" class="btn btn-danger" /> |
+        <input type="submit" value="Eliminar" class="btn btn-danger" />
         <a asp-page="./Index">Volver</a>
     </form>
 </div>

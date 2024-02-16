@@ -17,30 +17,31 @@
                 <input asp-for="Game.Name" class="form-control" />
                 <span asp-validation-for="Game.Name" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="Game.MasterName" class="control-label"></label>
                 <input asp-for="Game.MasterName" class="form-control" />
                 <span asp-validation-for="Game.MasterName" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="Game.HoursPlayed" class="control-label"></label>
                 <input asp-for="Game.HoursPlayed" class="form-control" />
                 <span asp-validation-for="Game.HoursPlayed" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="Game.StartedAt" class="control-label"></label>
                 <input asp-for="Game.StartedAt" class="form-control" />
                 <span asp-validation-for="Game.StartedAt" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <input type="submit" value="Guardar" class="btn btn-primary" />
+                <a asp-page="Index" class="btn btn-dark">Volver</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-page="Index">Volver</a>
 </div>
 
 @section Scripts {

@@ -8,7 +8,7 @@
 <h1>Partidas</h1>
 
 <p>
-    <a asp-page="Create">Nueva</a>
+    <a asp-page="Create" class="btn btn-success">+ Nueva</a>
 </p>
 <table class="table">
     <thead>
@@ -29,6 +29,7 @@
         </tr>
     </thead>
     <tbody>
+
 @foreach (var item in Model.Game) {
         <tr>
             <td>
@@ -44,11 +45,46 @@
                 @Html.DisplayFor(modelItem => item.StartedAt)
             </td>
             <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id">Editar</a> |
-                <a asp-page="./Details" asp-route-id="@item.Id">Detalles</a> |
-                <a asp-page="./Delete" asp-route-id="@item.Id">Eliminar</a>
+                <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-primary">Editar</a>
+                <a asp-page="./Details" asp-route-id="@item.Id" class="btn btn-secondary">Detalles</a>
+                <button data-id="@item.Id" class="btn btn-warning deleteBtn" type="button">Eliminar</button>
             </td>
         </tr>
 }
     </tbody>
 </table>
+
+<form asp-page="./Delete" id="gameDeleteForm">
+    <input type="hidden" id="gameId" name="id" />
+</form>
+
+@section Scripts{
+    <script>
+        $(function () {
+            $('.deleteBtn').click(function (e) {
+                Swal.fire({
+                    title: "¿Estás seguro?",
+                    text: "¡No podrás deshacerlo!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#d33",
+                    cancelButtonColor: "#3085d6",
+                    confirmButtonText: "Confirmar"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: "¡Hecho!",
+                            text: "Se ha eliminado la partida.",
+                            icon: "success"
+                        });
+
+                        var btn = $(this);
+                        var id = btn.data("id");
+                        $("#gameId").val(id);
+                        $("#gameDeleteForm").submit();
+                    }
+                });
+            })
+        })
+    </script>
+}
