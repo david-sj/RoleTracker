@@ -6,38 +6,53 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using RoleTracker.Data;
+using RoleTracker.DTO;
 using RoleTracker.Models;
+using RoleTracker.Services;
 
 namespace RoleTracker.Pages.Characters
 {
     public class CreateModel : PageModel
     {
-        private readonly RoleTracker.Data.RoleTrackerContext _context;
+        private readonly ICharacterCrudService _characterCrudService;
+        private readonly IGameQueryService _gameQueryService;
 
-        public CreateModel(RoleTracker.Data.RoleTrackerContext context)
+        public CreateModel(ICharacterCrudService characterCrudService, IGameQueryService gameQueryService)
         {
-            _context = context;
+            _characterCrudService = characterCrudService;
+            _gameQueryService = gameQueryService;
         }
 
-        public IActionResult OnGet()
+        public List<SelectListItem> Games { get; set; }
+
+        public async Task<IActionResult> OnGetAsync()
         {
+            Games = await _gameQueryService.GetGamesForSelector();
+
             return Page();
         }
 
         [BindProperty]
         public Character Character { get; set; } = default!;
-        
-
-        // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
+       
         public async Task<IActionResult> OnPostAsync()
         {
-          if (!ModelState.IsValid || _context.Character == null || Character == null)
+            if (!ModelState.IsValid || Character is null)
             {
                 return Page();
             }
 
-            _context.Character.Add(Character);
-            await _context.SaveChangesAsync();
+            var characterCommand = new CharacterCommand()
+            {
+                Id = Character.Id,
+                Name = Character.Name,
+                Player = Character.Player,
+                Race = Character.Race,
+                Level = Character.Level,
+                GameId = Character.GameId
+            };
+
+            await _characterCrudService.CreateCharacterAsync(characterCommand);
 
             return RedirectToPage("./Index");
         }

@@ -7,9 +7,9 @@
 
 <h1>Eliminar</h1>
 
-<h3>Estás seguro de que quieres eliminar este personaje?</h3>
+<h3>Seguro que quieres eliminar este personaje?</h3>
 <div>
-    <h4>Character</h4>
+    <h4>Personaje</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -37,16 +37,16 @@
             @Html.DisplayFor(model => model.Character.Level)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Character.GameId)
+            @Html.DisplayNameFor(model => model.Character.Game)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Character.GameId)
+            @Html.DisplayFor(model => model.Character.Game.Name)
         </dd>
     </dl>
     
     <form method="post">
         <input type="hidden" asp-for="Character.Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <input type="submit" value="Eliminar" class="btn btn-danger" /> |
         <a asp-page="./Index">Volver</a>
     </form>
 </div>

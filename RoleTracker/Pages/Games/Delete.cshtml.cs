@@ -7,16 +7,19 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using RoleTracker.Data;
 using RoleTracker.Models;
+using RoleTracker.Services;
 
 namespace RoleTracker.Pages.Games
 {
     public class DeleteModel : PageModel
     {
-        private readonly RoleTracker.Data.RoleTrackerContext _context;
+        private readonly IGameCrudService _gameCrudService;
+        private readonly IGameQueryService _gameQueryService;
 
-        public DeleteModel(RoleTracker.Data.RoleTrackerContext context)
+        public DeleteModel(IGameCrudService gameCrudService, IGameQueryService gameQueryService)
         {
-            _context = context;
+            _gameCrudService = gameCrudService;
+            _gameQueryService = gameQueryService;
         }
 
         [BindProperty]
@@ -24,38 +27,31 @@ namespace RoleTracker.Pages.Games
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Game == null)
+            if (id is null)
             {
                 return NotFound();
             }
 
-            var game = await _context.Game.FirstOrDefaultAsync(m => m.Id == id);
+            var game = await _gameQueryService.GetGameByIdAsync(id.Value);
 
-            if (game == null)
+            if (game is null)
             {
                 return NotFound();
             }
-            else 
-            {
-                Game = game;
-            }
+
+            Game = game;
+
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(int? id)
         {
-            if (id == null || _context.Game == null)
+            if (id is null)
             {
                 return NotFound();
             }
-            var game = await _context.Game.FindAsync(id);
 
-            if (game != null)
-            {
-                Game = game;
-                _context.Game.Remove(Game);
-                await _context.SaveChangesAsync();
-            }
+            await _gameCrudService.DeleteGameAsync(id.Value);
 
             return RedirectToPage("./Index");
         }

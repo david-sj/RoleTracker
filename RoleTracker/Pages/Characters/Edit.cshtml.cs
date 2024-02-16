@@ -35,7 +35,7 @@ namespace RoleTracker.Pages.Characters
         public List<SelectListItem> Games { get; set; }
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (!id.HasValue)
+            if (id is null)
             {
                 return NotFound();
             }
@@ -71,11 +71,11 @@ namespace RoleTracker.Pages.Characters
 
             try
             {
-                await _characterCrudService.SaveCharacterAsync(characterCommand);
+                await _characterCrudService.EditCharacterAsync(characterCommand);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!await CharacterExists(Character.Id))
+                if (!await CharacterExistsAsync(Character.Id))
                 {
                     return NotFound();
                 }
@@ -88,7 +88,7 @@ namespace RoleTracker.Pages.Characters
             return RedirectToPage("./Index");
         }
 
-        private async Task<bool> CharacterExists(int id)
+        private async Task<bool> CharacterExistsAsync(int id)
         {
           return await _characterQueryService.CharacterExistsAsync(id);
         }

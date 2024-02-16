@@ -14,34 +14,23 @@ namespace RoleTracker.Pages.Characters
 {
     public class DetailsModel : PageModel
     {
-        private readonly RoleTracker.Data.RoleTrackerContext _context;
-        private readonly IGameQueryService _gameQueryService;
         private readonly ICharacterQueryService _characterQueryService;
-        private readonly ICharacterCrudService _characterCrudService;
 
-        public DetailsModel(RoleTracker.Data.RoleTrackerContext context,
-                            IGameQueryService gameQueryService,
-                            ICharacterQueryService characterQueryService,
-                            ICharacterCrudService characterCrudService)
+        public DetailsModel(ICharacterQueryService characterQueryService)
         {
-            _context = context;
-            _gameQueryService = gameQueryService;
             _characterQueryService = characterQueryService;
-            _characterCrudService = characterCrudService;
         }
 
       public Character Character { get; set; } = default!; 
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (!id.HasValue)
+            if (id is null)
             {
                 return NotFound();
             }
 
             var character = await _characterQueryService.GetCharacterByIdAsync(id.Value);
-
-            //recuperar el nom del game
 
             if (character is null)
             {

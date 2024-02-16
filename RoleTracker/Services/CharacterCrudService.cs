@@ -15,7 +15,7 @@ namespace RoleTracker.Services
             _context = context;
         }
 
-        public async Task SaveCharacterAsync(CharacterCommand characterCommand)
+        public async Task EditCharacterAsync(CharacterCommand characterCommand)
         {
             var character = await _context.Character.FirstOrDefaultAsync(c => c.Id == characterCommand.Id);
 
@@ -28,6 +28,36 @@ namespace RoleTracker.Services
                 character.GameId = characterCommand.GameId;
 
                 _context.Attach(character).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task DeleteCharacterAsync(int id)
+        {
+            var character = await _context.Character.FirstOrDefaultAsync(c => c.Id == id);
+
+            if (character is not null)
+            {
+                _context.Character.Remove(character);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task CreateCharacterAsync(CharacterCommand characterCommand)
+        {
+            if (characterCommand is not null)
+            {
+                var newCharacter = new Character()
+                {
+                    Id = characterCommand.Id,
+                    Name = characterCommand.Name,
+                    Player = characterCommand.Player,
+                    Level = characterCommand.Level,
+                    Race = characterCommand.Race,
+                    GameId = characterCommand.GameId
+                };
+
+                _context.Character.Add(newCharacter);
                 await _context.SaveChangesAsync();
             }
         }

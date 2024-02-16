@@ -14,6 +14,7 @@ builder.Services.AddDbContext<RoleTrackerContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("RoleTrackerContext") ?? throw new InvalidOperationException("Connection string 'RoleTrackerContext' not found.")));
 
 builder.Services.AddScoped<IGameQueryService, GameQueryService>();
+builder.Services.AddScoped<IGameCrudService, GameCrudService>();
 builder.Services.AddScoped<ICharacterQueryService, CharacterQueryService>();
 builder.Services.AddScoped<ICharacterCrudService, CharacterCrudService>();
 
@@ -33,7 +34,6 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
 
 
 app.UseHttpsRedirection();

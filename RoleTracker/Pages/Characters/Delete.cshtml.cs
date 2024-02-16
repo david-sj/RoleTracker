@@ -6,17 +6,22 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using RoleTracker.Data;
+using RoleTracker.DTO;
 using RoleTracker.Models;
+using RoleTracker.Services;
 
 namespace RoleTracker.Pages.Characters
 {
     public class DeleteModel : PageModel
     {
-        private readonly RoleTracker.Data.RoleTrackerContext _context;
+        private readonly ICharacterQueryService _characterQueryService;
+        private readonly ICharacterCrudService _characterCrudService;
 
-        public DeleteModel(RoleTracker.Data.RoleTrackerContext context)
+        public DeleteModel(ICharacterQueryService characterQueryService,
+                         ICharacterCrudService characterCrudService)
         {
-            _context = context;
+            _characterQueryService = characterQueryService;
+            _characterCrudService = characterCrudService;
         }
 
         [BindProperty]
@@ -24,38 +29,31 @@ namespace RoleTracker.Pages.Characters
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Character == null)
+            if (id is null)
             {
                 return NotFound();
             }
 
-            var character = await _context.Character.FirstOrDefaultAsync(m => m.Id == id);
+            var character = await _characterQueryService.GetCharacterByIdAsync(id.Value);
 
-            if (character == null)
+            if (character is null)
             {
                 return NotFound();
             }
-            else 
-            {
-                Character = character;
-            }
+
+            Character = character;
+
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(int? id)
         {
-            if (id == null || _context.Character == null)
+            if (id is null)
             {
                 return NotFound();
             }
-            var character = await _context.Character.FindAsync(id);
 
-            if (character != null)
-            {
-                Character = character;
-                _context.Character.Remove(Character);
-                await _context.SaveChangesAsync();
-            }
+            await _characterCrudService.DeleteCharacterAsync(id.Value);
 
             return RedirectToPage("./Index");
         }

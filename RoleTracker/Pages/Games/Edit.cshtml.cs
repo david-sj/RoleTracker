@@ -1,23 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using RoleTracker.Data;
+using RoleTracker.DTO;
 using RoleTracker.Models;
+using RoleTracker.Services;
 
 namespace RoleTracker.Pages.Games
 {
     public class EditModel : PageModel
     {
-        private readonly RoleTracker.Data.RoleTrackerContext _context;
+        private readonly IGameQueryService _gameQueryService;
+        private readonly IGameCrudService _gameCrudService;
 
-        public EditModel(RoleTracker.Data.RoleTrackerContext context)
+        public EditModel(IGameQueryService gameQueryService, IGameCrudService gameCrudService)
         {
-            _context = context;
+            _gameQueryService = gameQueryService;
+            _gameCrudService = gameCrudService;
         }
 
         [BindProperty]
@@ -25,22 +23,21 @@ namespace RoleTracker.Pages.Games
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Game == null)
+            if (id is null)
             {
                 return NotFound();
             }
 
-            var game =  await _context.Game.FirstOrDefaultAsync(m => m.Id == id);
-            if (game == null)
+            var game = await _gameQueryService.GetGameByIdAsync(id.Value);
+            if (game is null)
             {
                 return NotFound();
             }
             Game = game;
+
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -48,15 +45,22 @@ namespace RoleTracker.Pages.Games
                 return Page();
             }
 
-            _context.Attach(Game).State = EntityState.Modified;
+            var gameCommand = new GameCommand()
+            {
+                Id = Game.Id,
+                Name = Game.Name,
+                MasterName = Game.MasterName,
+                HoursPlayed = Game.HoursPlayed,
+                StartedAt = Game.StartedAt
+            };
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _gameCrudService.EditGameAsync(gameCommand);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!GameExists(Game.Id))
+                if (!await GameExistsAsync(Game.Id))
                 {
                     return NotFound();
                 }
@@ -69,9 +73,9 @@ namespace RoleTracker.Pages.Games
             return RedirectToPage("./Index");
         }
 
-        private bool GameExists(int id)
+        private async Task<bool> GameExistsAsync(int id)
         {
-          return (_context.Game?.Any(e => e.Id == id)).GetValueOrDefault();
+            return await _gameQueryService.GameExistsAsync(id);
         }
     }
 }

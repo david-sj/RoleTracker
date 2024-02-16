@@ -6,7 +6,8 @@ namespace RoleTracker.Services
 {
     public interface ICharacterCrudService
     {
-        Task SaveCharacterAsync(CharacterCommand characterCommand);
-
+        Task EditCharacterAsync(CharacterCommand characterCommand);
+        Task DeleteCharacterAsync(int id);
+        Task CreateCharacterAsync(CharacterCommand characterCommand);
     }
 }

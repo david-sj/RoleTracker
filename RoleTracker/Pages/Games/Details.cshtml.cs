@@ -7,36 +7,37 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using RoleTracker.Data;
 using RoleTracker.Models;
+using RoleTracker.Services;
 
 namespace RoleTracker.Pages.Games
 {
     public class DetailsModel : PageModel
     {
-        private readonly RoleTracker.Data.RoleTrackerContext _context;
+        private readonly IGameQueryService _gameQueryService;
 
-        public DetailsModel(RoleTracker.Data.RoleTrackerContext context)
+        public DetailsModel(IGameQueryService gameQueryService)
         {
-            _context = context;
+            _gameQueryService = gameQueryService;
         }
 
-      public Game Game { get; set; } = default!; 
+        public Game Game { get; set; } = default!; 
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Game == null)
+            if (id is null)
             {
                 return NotFound();
             }
 
-            var game = await _context.Game.FirstOrDefaultAsync(m => m.Id == id);
-            if (game == null)
+            var game = await _gameQueryService.GetGameByIdAsync(id.Value);
+
+            if (game is null)
             {
                 return NotFound();
             }
-            else 
-            {
-                Game = game;
-            }
+
+            Game = game;
+
             return Page();
         }
     }

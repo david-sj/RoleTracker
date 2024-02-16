@@ -7,26 +7,24 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using RoleTracker.Data;
 using RoleTracker.Models;
+using RoleTracker.Services;
 
 namespace RoleTracker.Pages.Characters
 {
     public class IndexModel : PageModel
     {
-        private readonly RoleTracker.Data.RoleTrackerContext _context;
+        private readonly ICharacterQueryService _characterQueryService;
 
-        public IndexModel(RoleTracker.Data.RoleTrackerContext context)
+        public IndexModel(ICharacterQueryService characterQueryService)
         {
-            _context = context;
+            _characterQueryService = characterQueryService;
         }
 
         public IList<Character> Character { get;set; } = default!;
 
         public async Task OnGetAsync()
         {
-            if (_context.Character != null)
-            {
-                Character = await _context.Character.ToListAsync();
-            }
+            Character = await _characterQueryService.GetCharactersAsync();
         }
     }
 }

@@ -2,12 +2,11 @@
 @model RoleTracker.Pages.Games.CreateModel
 
 @{
-    ViewData["Title"] = "Nuevo";
+    ViewData["Title"] = "Nueva partida";
 }
 
 <h1>Nueva partida</h1>
 
-<h4>Game</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -34,7 +33,7 @@
                 <span asp-validation-for="Game.StartedAt" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Guardar" class="btn btn-primary" />
             </div>
         </form>
     </div>

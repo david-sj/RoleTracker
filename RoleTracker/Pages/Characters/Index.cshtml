@@ -5,7 +5,7 @@
     ViewData["Title"] = "Personajes";
 }
 
-<h1>Personaje</h1>
+<h1>Personajes</h1>
 
 <p>
     <a asp-page="Create">Nuevo</a>
@@ -26,7 +26,7 @@
                 @Html.DisplayNameFor(model => model.Character[0].Level)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Character[0].GameId)
+                @Html.DisplayNameFor(model => model.Character[0].Game)
             </th>
             <th></th>
         </tr>
@@ -47,11 +47,11 @@
                 @Html.DisplayFor(modelItem => item.Level)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.GameId)
+                @Html.DisplayFor(modelItem => item.Game.Name)
             </td>
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.Id">Editar</a> |
-                <a asp-page="./Details" asp-route-id="@item.Id">Detalle</a> |
+                <a asp-page="./Details" asp-route-id="@item.Id">Detalles</a> |
                 <a asp-page="./Delete" asp-route-id="@item.Id">Eliminar</a>
             </td>
         </tr>
