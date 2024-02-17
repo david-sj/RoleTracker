@@ -176,3 +176,10 @@ body {
         margin-top: 7rem;
     }
 }
+
+.dt-paging-button{
+    padding: 10px;
+    border: none;
+    margin-left: 3px;
+    border-radius: 5px;
+}
